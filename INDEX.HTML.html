@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assured Care Plus Hospital - Auto Assistant</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        #chat-container { width: 450px; max-width: 95%; margin: 30px auto; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 650px; border: 1px solid #ddd; }
+        #chat-header { background: #800000; color: white; padding: 15px; text-align: center; }
+        #chat-header h2 { margin: 0; font-size: 1.2em; }
+        #chat-header small { opacity: 0.9; }
+        #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; line-height: 1.4; font-size: 0.95em; }
+        .bot-msg { background: #e8e8e8; align-self: flex-start; color: #333; border-radius: 15px 15px 15px 0; }
+        .user-msg { background: #800000; color: white; align-self: flex-end; border-radius: 15px 15px 0 15px; }
+        #options-area { padding: 10px; border-top: 1px solid #eee; background: #fff; }
+        .button-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        .btn { background: #fff; border: 1px solid #800000; color: #800000; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.85em; transition: 0.3s; }
+        .btn:hover { background: #800000; color: white; }
+        .emergency-text { color: #d9534f; font-weight: bold; }
+        .contact-link { color: #800000; font-weight: bold; text-decoration: none; }
+        
+        /* Style for Feedback Buttons */
+        .feedback-container { display: flex; gap: 10px; margin-top: 10px; }
+        .feedback-btn { border: 1px solid #ccc; background: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.9em; }
+        .feedback-btn:hover { background: #f0f0f0; border-color: #800000; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="chat-header">
+        <h2>Assured Care Plus Hospital</h2>
+        <small>"Assurance of Healing"</small>
+    </div>
+    <div id="chat-box">
+        <div class="bot-msg">
+            Welcome to Assured Care Plus Hospital!<br><br>
+            Please select your preferred language / कृपया आपली भाषा निवडा:
+        </div>
+    </div>
+    <div id="options-area">
+        <div class="button-container" id="dynamic-buttons">
+            <button class="btn" onclick="setLanguage('English')">English</button>
+            <button class="btn" onclick="setLanguage('Marathi')">मराठी (Marathi)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const buttonArea = document.getElementById('dynamic-buttons');
+    let currentLang = 'English';
+
+    function appendMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}-msg`;
+        msgDiv.innerHTML = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        appendMessage(lang, 'user');
+        const welcome = lang === 'English' ? "How can I assist you today?" : "आम्ही तुम्हाला कशी मदत करू शकतो?";
+        setTimeout(() => {
+            appendMessage(welcome, 'bot');
+            showMainMenu();
+        }, 500);
+    }
+
+    function showMainMenu() {
+        buttonArea.innerHTML = '';
+        const menuItems = currentLang === 'English' ? 
+            [
+                { label: '🚨 Emergency', val: 'emergency' },
+                { label: '🕒 OPD Timings', val: 'opd' },
+                { label: '🔪 Surgeries', val: 'surgeries' },
+                { label: '🏥 Facilities', val: 'facilities' },
+                { label: '👨‍⚕️ Doctors', val: 'doctors' },
+                { label: '📍 Location', val: 'location' },
+                { label: '❓ Other', val: 'other' }
+            ] : 
+            [
+                { label: '🚨 इमर्जन्सी', val: 'emergency' },
+                { label: '🕒 ओपीडी वेळ', val: 'opd' },
+                { label: '🔪 शस्त्रक्रिया', val: 'surgeries' },
+                { label: '🏥 सुविधा', val: 'facilities' },
+                { label: '👨‍⚕️ आमचे डॉक्टर', val: 'doctors' },
+                { label: '📍 पत्ता', val: 'location' },
+                { label: '❓ इतर', val: 'other' }
+            ];
+
+        menuItems.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.innerHTML = item.label;
+            btn.onclick = () => handleChoice(item.val, item.label);
+            buttonArea.appendChild(btn);
+        });
+    }
+
+    function handleChoice(val, label) {
+        appendMessage(label, 'user');
+        let response = "";
+
+        switch(val) {
+            case 'emergency':
+                response = `<span class="emergency-text">🚨 EMERGENCY: <a class='contact-link' href='tel:7066304304'>7066 304 304</a></span><br>` +
+                           `Reception: 0253 2468786<br>Casualty: 8766 020 627`;
+                break;
+            case 'opd':
+                response = `<b>OPD Timings:</b><br>` +
+                           `• <b>Dr. Atulram Agrawal</b>: 1:00 PM - 4:00 PM<br>` +
+                           `• <b>Dr. Ganesh Dahale</b>: 7:00 PM - 8:00 PM`;
+                break;
+            case 'surgeries':
+                response = `<b>Surgical Services:</b><br>• General Surgery<br>• Orthopedic Surgery<br>• Neurosurgery<br>• Urological Procedures`;
+                break;
+            case 'facilities':
+                response = `<b>Our Facilities:</b><br>• 50-Bed Multi-Specialty Hospital<br>• 24/7 Pathology & Pharmacy`;
+                break;
+            case 'doctors':
+                response = `<b>Specialist Team:</b><br>• Dr. Atulram Agrawal (Medicine)<br>• Dr. Ganesh S. Dahale (Medicine)`;
+                break;
+            case 'location':
+                response = `<b>Address:</b> Nashik Road - 422 101.<br><a class='btn' href='#' style='text-decoration:none;'>📍 View on Map</a>`;
+                break;
+            case 'other':
+                response = `📞 Contact: <a class='contact-link' href='tel:8698204204'>8698 204 204</a>`;
+                break;
+        }
+
+        setTimeout(() => {
+            appendMessage(response, 'bot');
+            setTimeout(() => showFeedback(), 1000);
+        }, 500);
+    }
+
+    function showFeedback() {
+        const feedbackHTML = `
+            <strong>Thank you for using the Assured Care Plus Digital Assistant!</strong><br>
+            We hope your request was handled quickly and efficiently. Your feedback helps us provide better care.<br><br>
+            <i>Was this helpful?</i><br>
+            <div class="feedback-container">
+                <button class="feedback-btn" onclick="submitFeedback('Yes')">👍 Yes</button>
+                <button class="feedback-btn" onclick="submitFeedback('No')">👎 No</button>
+            </div>
+        `;
+        appendMessage(feedbackHTML, 'bot');
+        
+        buttonArea.innerHTML = '';
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'btn';
+        resetBtn.innerHTML = currentLang === 'English' ? '🔄 Main Menu' : '🔄 मुख्य मेनू';
+        resetBtn.onclick = () => showMainMenu();
+        buttonArea.appendChild(resetBtn);
+    }
+
+    function submitFeedback(val) {
+        appendMessage(val === 'Yes' ? '👍 Yes' : '👎 No', 'user');
+        
+        let thanksMessage = "";
+        if(val === 'Yes') {
+            thanksMessage = currentLang === 'English' ? 
+                "Thank you for your feedback! Glad we could help." : 
+                "तुमच्या अभिप्रायाबद्दल धन्यवाद! आम्हाला आनंद आहे की आम्ही मदत करू शकलो.";
+        } else {
+            // Updated logic for unsatisfied users
+            thanksMessage = currentLang === 'English' ? 
+                "We apologize for the inconvenience. For more information and personalized assistance, please call us at: <br>📞 <a class='contact-link' href='tel:8698204204'>8698 204 204</a>" : 
+                "तुमच्या गैरसोयीबद्दल आम्ही दिलगीर आहोत. अधिक माहिती आणि मदतीसाठी, कृपया आम्हाला येथे कॉल करा: <br>📞 <a class='contact-link' href='tel:8698204204'>8698 204 204</a>";
+        }
+        
+        setTimeout(() => appendMessage(thanksMessage, 'bot'), 500);
+    }
+</script>
+
+</body>
+</html>
